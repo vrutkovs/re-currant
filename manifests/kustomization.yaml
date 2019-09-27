@@ -6,7 +6,6 @@ resources:
   - service.yaml
   - route.yaml
   - serviceaccount.yaml
-  - clusterrolebinding.yaml
 generatorOptions:
   disableNameSuffixHash: true
 secretGenerator:
