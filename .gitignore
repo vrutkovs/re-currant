@@ -13,7 +13,3 @@
 
 # Binary
 re-currant
-
-# custom kustomization file
-/kustomization.yaml
-test-patches/

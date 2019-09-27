@@ -1,19 +1,15 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  annotations:
-    image.openshift.io/triggers: |
-      [
-        {"from":{"kind":"ImageStreamTag","name":"recurrant:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"recurrant\")].image"}
-      ]
   labels:
-    app: recurrant
+    app.kubernetes.io/name: recurrant
   name: recurrant
   namespace: recurrant
 spec:
   replicas: 1
   selector:
-    deploymentconfig: recurrant
+    matchLabels:
+      app.kubernetes.io/name: recurrant
   strategy:
     activeDeadlineSeconds: 21600
     resources: {}
@@ -23,16 +19,14 @@ spec:
       maxUnavailable: 25%
       timeoutSeconds: 600
       updatePeriodSeconds: 1
-    type: Rolling
+    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        app: recurrant
-        deploymentconfig: recurrant
+        app.kubernetes.io/name: recurrant
     spec:
       containers:
-        - image: ""
+        - image: "quay.io/vrutkovs/recurrant"
           imagePullPolicy: Always
           name: recurrant
           envFrom:
@@ -77,14 +71,3 @@ spec:
       volumes:
         - name: git-repo
           emptyDir: {}
-  test: false
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - recurrant
-        from:
-          kind: ImageStreamTag
-          name: "recurrant:latest"
-      type: ImageChange
-    - type: ConfigChange

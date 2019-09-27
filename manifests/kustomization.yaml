@@ -1,25 +1,5 @@
 namespace: recurrant
 resources:
   - namespace.yaml
-  - imagestream.yaml
-  - deploymentconfig.yaml
   - serviceaccount.yaml
-generatorOptions:
-  disableNameSuffixHash: true
-secretGenerator:
-  - name: recurrant
-    literals:
-      # Repo with manifests to apply
-      - GIT_SYNC_REPO=https://github.com/vrutkovs/k8s-podhunt
-      # Repo branch
-      - GIT_SYNC_REF=master
-      # Subdir in /tmp/git to checkout the repo
-      - GIT_SYNC_CHECKOUT=repo
-      # Sync period
-      - GIT_SYNC_WAIT=10
-      # Backoff time before re-attempting the apply
-      - GIT_SYNC_WEBHOOK_TIMEOUT=30
-      # Subdir with manifests to apply
-      - RECURRANT_SUBDIR=manifests
-      # Use kustomize to apply manifests
-      - RECURRANT_USE_KUSTOMIZE=true
+  - deployment.yaml

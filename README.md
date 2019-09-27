@@ -5,16 +5,17 @@ A poor man's gitops operator, which blindly applies kustomize files
 
 Create `kustomization.yaml` (see `manifests/kustomization.yaml` as an example):
 ```
-# Create namespace, imagestream, deployment config etc.
+# Use remote manifests as base
 bases:
-  - manifests/
-# Apply patches to change recurrant namespace, config etc.
-patchesStrategicMerge:
-  - test-patches/route.yaml
+  - github.com/vrutkovs/re-currant//manifests?ref=master
+# Add additional resources, e,g. cluster-admin permissions
+resources:
+  - cluster-admin.yaml
 generatorOptions:
   disableNameSuffixHash: true
 secretGenerator:
   - name: recurrant
+    namespace: recurrant
     literals:
       # Repo with manifests to apply
       - GIT_SYNC_REPO=https://github.com/vrutkovs/k8s-podhunt
