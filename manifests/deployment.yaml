@@ -70,7 +70,7 @@ spec:
             - --dest=$(GIT_SYNC_CHECKOUT)
             - --wait=$(GIT_SYNC_WAIT)
             - --webhook-url=http://localhost:8080/apply
-            - --webhook-timeout=$(GIT_SYNC_WEBHOOK_TIMEOUT)s
+            - --webhook-timeout=$(GIT_SYNC_WEBHOOK_TIMEOUT)
             - --webhook-backoff=0s
           envFrom:
             - secretRef:

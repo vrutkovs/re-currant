@@ -26,7 +26,7 @@ secretGenerator:
       # Sync period
       - GIT_SYNC_WAIT=10
       # Backoff time before re-attempting the apply
-      - GIT_SYNC_WEBHOOK_TIMEOUT=30
+      - GIT_SYNC_WEBHOOK_TIMEOUT=30s
       # Subdir with manifests to apply
       - RECURRANT_SUBDIR=manifests
       # Use kustomize to apply manifests
