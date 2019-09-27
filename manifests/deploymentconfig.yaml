@@ -53,7 +53,7 @@ spec:
             - --repo=$(GIT_SYNC_REPO)
             - --branch=$(GIT_SYNC_REF)
             - --wait=$(GIT_SYNC_WAIT)
-            - --webhook-url=http://localhost:8080/reload
+            - --webhook-url=http://localhost:8080/apply
           envFrom:
             - secretRef:
                 name: recurrant
