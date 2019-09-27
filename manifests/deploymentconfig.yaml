@@ -44,7 +44,7 @@ spec:
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
-          workindDir: /tmp/git
+          workingDir: /tmp/git
           volumeMounts:
             - name: git-repo
               mountPath: /tmp/git
