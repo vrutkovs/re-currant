@@ -35,3 +35,11 @@ secretGenerator:
 # Git repository credentials
 
 TODO: use kustomize to create a secret, mount in recurrant pod and reconfigure git-sync to use it
+
+# Why not an operator?
+
+Creating an operator to setup re-currant in particular namespaces and granular permissions would be very useful. Although at this stage creating CRDs requires `cluster-admin` permissions, which might not work for some installs. This app is deliberately kept simple and requires minimal permissions. Other permissions (like cross-namespace applies) could be added via additional rolebindings to re-currant serviceaccount.
+
+# Push model
+
+re-currant is meant to be kept simple, it basically runs `kubectl apply`. Push model requires a proper pipeline setup, thus [Tekton](https://tekton.dev/) would be a better choice.
