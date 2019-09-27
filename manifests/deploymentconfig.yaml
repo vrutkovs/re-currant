@@ -46,7 +46,7 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - name: git-repo
-              mountPath: /repo
+              mountPath: /tmp/git
         - name: git-sync
           image: k8s.gcr.io/git-sync:v3.1.2
           args:
@@ -60,7 +60,7 @@ spec:
           resources: {}
           volumeMounts:
             - name: git-repo
-              mountPath: /repo
+              mountPath: /tmp/git
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
