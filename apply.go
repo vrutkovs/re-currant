@@ -29,9 +29,22 @@ func (e *Env) apply(c *gin.Context) {
 	subDir := os.Getenv("RECURRANT_SUBDIR")
 	applyPath := path.Join(gitDir, subDir)
 
+	useKustomize := false
+	useKustomizeEnv := os.Getenv("RECURRANT_USE_KUSTOMIZE")
+	if useKustomizeEnv == "true" {
+		useKustomize = true
+	}
+
 	// Run `oc apply -k <dir-name>`
 	command := "oc"
-	commandArgs := []string{"apply", "-k", applyPath}
+	commandArgs := make([]string, 3)
+	commandArgs[0] = "apply"
+	if useKustomize {
+		commandArgs[1] = "-k"
+	} else {
+		commandArgs[1] = "-f"
+	}
+	commandArgs[2] = applyPath
 	log.Printf("Running %s %v", command, strings.Join(commandArgs, " "))
 
 	cmd := exec.Command(command, commandArgs...)

@@ -23,3 +23,4 @@ secretGenerator:
       # Subdir with manifests to apply
       - RECURRANT_SUBDIR=manifests
       # Use kustomize to apply manifests
+      - RECURRANT_USE_KUSTOMIZE=true
