@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -14,8 +15,12 @@ func (e *Env) apply(c *gin.Context) {
 	gitDirSlice := strings.Split(gitRepo, "/")
 	gitDir := gitDirSlice[len(gitDirSlice)-1]
 
+	// Make sure we run in a subdir
+	subDir := os.Getenv("RECURRANT_SUBDIR")
+	applyPath := path.Join(gitDir, subDir)
+
 	// Run `oc apply -k <dir-name>`
-	cmd := exec.Command("oc", "apply", "-k", gitDir)
+	cmd := exec.Command("oc", "apply", "-k", applyPath)
 	stdout, err := cmd.Output()
 
 	if err != nil {
