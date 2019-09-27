@@ -15,5 +15,5 @@
 re-currant
 
 # custom kustomization file
-kustomization.yaml
+/kustomization.yaml
 test-patches/

@@ -4,7 +4,7 @@ metadata:
   annotations:
     image.openshift.io/triggers: |
       [
-        {"from":{"kind":"ImageStreamTag","name":"recurrant:bin"},"fieldPath":"spec.template.spec.containers[?(@.name==\"recurrant\")].image"}
+        {"from":{"kind":"ImageStreamTag","name":"recurrant:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"recurrant\")].image"}
       ]
   labels:
     app: recurrant
@@ -46,7 +46,7 @@ spec:
           terminationMessagePolicy: File
           volumeMounts:
             - name: git-repo
-              path: /repo
+              mountPath: /repo
         - name: git-sync
           image: k8s.gcr.io/git-sync:v3.1.2
           args:
@@ -81,6 +81,6 @@ spec:
           - recurrant
         from:
           kind: ImageStreamTag
-          name: "recurrant:bin"
+          name: "recurrant:latest"
       type: ImageChange
     - type: ConfigChange

@@ -12,6 +12,6 @@ spec:
     - from:
         kind: DockerImage
         name: quay.io/vrutkovs/recurrant
-      name: recurrant
+      name: latest
       referencePolicy:
         type: Local
