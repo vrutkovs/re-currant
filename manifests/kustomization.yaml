@@ -3,8 +3,6 @@ resources:
   - namespace.yaml
   - imagestream.yaml
   - deploymentconfig.yaml
-  - service.yaml
-  - route.yaml
   - serviceaccount.yaml
 generatorOptions:
   disableNameSuffixHash: true
