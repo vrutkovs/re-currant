@@ -56,7 +56,8 @@ spec:
             - --dest=checkout
             - --wait=$(GIT_SYNC_WAIT)
             - --webhook-url=http://localhost:8080/apply
-            - --webhook-backoff=$(GIT_SYNC_WEBHOOK_BACKOFF)
+            - --webhook-timeout=$(GIT_SYNC_WEBHOOK_TIMEOUT)s
+            - --webhook-backoff=0s
           envFrom:
             - secretRef:
                 name: recurrant
