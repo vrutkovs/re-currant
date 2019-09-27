@@ -1,0 +1,35 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: vrutkovs/action-s2i@master
+      with:
+        path: .
+        base: registry.fedoraproject.org/f29/golang
+        image: recurrant:src
+    - uses: vrutkovs/action-bin-container@master
+      with:
+        source_image: recurrant:src
+        source_path: /opt/app-root/gobinary
+        binary_base: registry.access.redhat.com/ubi8/ubi
+        binary_path: /usr/local/bin/recurrant
+        binary_image: quay.io/vrutkovs/recurrant:latest
+    - name: login to quay
+      uses: actions/docker/login@master
+      env:
+        DOCKER_REGISTRY_URL: quay.io
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      if: github.event_name == 'push'
+    - name: push the image
+      uses: actions/docker/cli@master
+      with:
+        args: "push quay.io/vrutkovs/recurrant:latest"
+      if: github.event_name == 'push'
