@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: recurrant
+  annotations:
+    openshift.io/node-selector: ""
+  labels:
+    name: recurrant

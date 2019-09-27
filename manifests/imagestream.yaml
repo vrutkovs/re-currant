@@ -1,0 +1,17 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: recurrant
+  namespace: recurrant
+  labels:
+    app: recurrant
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - from:
+        kind: DockerImage
+        name: quay.io/vrutkovs/recurrant
+      name: recurrant
+      referencePolicy:
+        type: Local

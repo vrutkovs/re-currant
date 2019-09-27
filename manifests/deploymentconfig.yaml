@@ -1,0 +1,60 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    image.openshift.io/triggers: |
+      [
+        {"from":{"kind":"ImageStreamTag","name":"recurrant:bin"},"fieldPath":"spec.template.spec.containers[?(@.name==\"recurrant\")].image"}
+      ]
+  labels:
+    app: recurrant
+  name: recurrant
+  namespace: recurrant
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: recurrant
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: recurrant
+        deploymentconfig: recurrant
+    spec:
+      containers:
+        - image: ""
+          imagePullPolicy: Always
+          name: recurrant
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccountName: gitops-robot
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - recurrant
+        from:
+          kind: ImageStreamTag
+          name: "recurrant:bin"
+      type: ImageChange
+    - type: ConfigChange
