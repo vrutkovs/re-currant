@@ -12,7 +12,7 @@ generatorOptions:
 secretGenerator:
   - name: recurrant
     literals:
-      - GIT_SYNC_REPO=https://github.com/vrutkovs/ocp-gitops
+      - GIT_SYNC_REPO=https://github.com/vrutkovs/k8s-podhunt
       - GIT_SYNC_REF=master
       - GIT_SYNC_WAIT=10
-      - RECURRANT_SUBDIR=cluster-config
+      - RECURRANT_SUBDIR=manifests
