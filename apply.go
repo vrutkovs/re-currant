@@ -32,7 +32,7 @@ func (e *Env) apply(c *gin.Context) {
 	// Run `oc apply -k <dir-name>`
 	command := "oc"
 	commandArgs := []string{"apply", "-k", applyPath}
-	log.Printf("Running %s%v", command, commandArgs)
+	log.Printf("Running %s %v", command, strings.Join(commandArgs, " "))
 
 	cmd := exec.Command(command, commandArgs...)
 	stdout, err := cmd.Output()
