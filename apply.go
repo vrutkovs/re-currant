@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -20,13 +21,17 @@ func (e *Env) apply(c *gin.Context) {
 	applyPath := path.Join(gitDir, subDir)
 
 	// Run `oc apply -k <dir-name>`
-	cmd := exec.Command("oc", "apply", "-k", applyPath)
+	command := "oc"
+	commandArgs := []string{"apply", "-k", applyPath}
+	log.Printf("Running %s%-v", command, commandArgs)
+
+	cmd := exec.Command(command, commandArgs...)
 	stdout, err := cmd.Output()
 
 	if err != nil {
-		println(err.Error())
+		log.Printf(err.Error())
 		return
 	}
 
-	print(string(stdout))
+	log.Printf(string(stdout))
 }
