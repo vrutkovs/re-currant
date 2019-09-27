@@ -43,4 +43,5 @@ func (e *Env) apply(c *gin.Context) {
 	}
 
 	log.Printf(string(stdout))
+	c.String(200, "done")
 }
