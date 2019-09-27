@@ -55,6 +55,7 @@ spec:
             - --branch=$(GIT_SYNC_REF)
             - --wait=$(GIT_SYNC_WAIT)
             - --webhook-url=http://localhost:8080/apply
+            - --webhook-backoff=$(GIT_SYNC_WEBHOOK_BACKOFF)
           envFrom:
             - secretRef:
                 name: recurrant

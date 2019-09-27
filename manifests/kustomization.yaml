@@ -15,4 +15,6 @@ secretGenerator:
       - GIT_SYNC_REPO=https://github.com/vrutkovs/k8s-podhunt
       - GIT_SYNC_REF=master
       - GIT_SYNC_WAIT=10
+      # Backoff time before re-attempting the apply
+      - GIT_SYNC_WEBHOOK_BACKOFF=30
       - RECURRANT_SUBDIR=manifests
