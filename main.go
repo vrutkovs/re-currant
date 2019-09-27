@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"path"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,17 +17,16 @@ func main() {
 	// setup webhook listener
 	r := gin.Default()
 
-	gitRepo := os.Getenv("GIT_SYNC_REPO")
+	gitRepo := os.Getenv("GIT_SYNC_CHECKOUT")
 	if len(gitRepo) == 0 {
-		panic("GIT_SYNC_REPO env var is not set")
+		panic("GIT_SYNC_CHECKOUT env var is not set")
 	}
 	subDir := os.Getenv("RECURRANT_SUBDIR")
 	if len(subDir) == 0 {
 		panic("RECURRANT_SUBDIR env var is not set")
 	}
 
-	gitDirSlice := strings.Split(gitRepo, "/")
-	applyPath := path.Join(gitDirSlice[len(gitDirSlice)-1], subDir)
+	applyPath := path.Join(gitRepo, subDir)
 
 	useKustomize := false
 	useKustomizeEnv := os.Getenv("RECURRANT_USE_KUSTOMIZE")

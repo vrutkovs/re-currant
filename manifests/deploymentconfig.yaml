@@ -53,6 +53,7 @@ spec:
           args:
             - --repo=$(GIT_SYNC_REPO)
             - --branch=$(GIT_SYNC_REF)
+            - --dest=checkout
             - --wait=$(GIT_SYNC_WAIT)
             - --webhook-url=http://localhost:8080/apply
             - --webhook-backoff=$(GIT_SYNC_WEBHOOK_BACKOFF)
