@@ -35,18 +35,44 @@ spec:
         - image: ""
           imagePullPolicy: Always
           name: recurrant
+          envFrom:
+            - secretRef:
+                name: recurrant
           ports:
             - containerPort: 8080
               protocol: TCP
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          volumeMounts:
+            - name: git-repo
+              path: /repo
+        - name: git-sync
+          image: k8s.gcr.io/git-sync:v3.1.2
+          args:
+            - --repo=$(GIT_SYNC_REPO)
+            - --branch=$(GIT_SYNC_REF)
+            - --wait=$(GIT_SYNC_WAIT)
+            - --webhook-url="http://localhost:8080/reload"
+          envFrom:
+            - secretRef:
+                name: recurrant
+          resources: {}
+          volumeMounts:
+            - name: git-repo
+              mountPath: /repo
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       serviceAccountName: gitops-robot
       securityContext: {}
       terminationGracePeriodSeconds: 30
+      volumes:
+        - name: git-repo
+          emptyDir: {}
   test: false
   triggers:
     - imageChangeParams:
