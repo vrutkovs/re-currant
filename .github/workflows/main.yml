@@ -18,7 +18,7 @@ jobs:
       with:
         source_image: recurrant:src
         source_path: /opt/app-root/gobinary
-        binary_base: registry.access.redhat.com/ubi8/ubi
+        binary_base: quay.io/openshift/origin-cli:4.2
         binary_path: /usr/local/bin/recurrant
         binary_image: quay.io/vrutkovs/recurrant:latest
     - name: login to quay
