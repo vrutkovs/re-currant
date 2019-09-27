@@ -14,7 +14,7 @@ import (
 
 func (e *Env) apply(c *gin.Context) {
 	// Read current commit from .git/FETCH_HEAD
-	dat, err := ioutil.ReadFile(".git/HEAD")
+	dat, err := ioutil.ReadFile(".git/FETCH_HEAD")
 	if err != nil {
 		panic(fmt.Sprintf("error reading git head: %v", err))
 	}
