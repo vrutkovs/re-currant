@@ -17,7 +17,7 @@ func main() {
 	// Verify env vars are set
 	gitRepo := os.Getenv("GIT_SYNC_CHECKOUT")
 	if len(gitRepo) == 0 {
-		panic("GIT_SYNC_CHECKOUT env var is not set")
+		gitRepo = "repo"
 	}
 	subDir := os.Getenv("RECURRANT_SUBDIR")
 	if len(subDir) == 0 {

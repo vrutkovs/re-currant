@@ -21,8 +21,6 @@ secretGenerator:
       - GIT_SYNC_REPO=https://github.com/vrutkovs/k8s-podhunt
       # Repo branch
       - GIT_SYNC_REF=master
-      # Subdir in /tmp/git to checkout the repo
-      - GIT_SYNC_CHECKOUT=repo
       # Sync period
       - GIT_SYNC_WAIT=10
       # Backoff time before re-attempting the apply
