@@ -76,13 +76,11 @@ func TestApply(t *testing.T) {
 			execCommand = fakeExecCommand
 			defer func() { execCommand = exec.Command }()
 
-			body := map[string]string(
-				map[string]string{
-					"args":      tc.Args,
-					"cmd":       tc.Cmd,
-					"exit_code": tc.ExitCode,
-				},
-			)
+			body := map[string]string{
+				"args":      tc.Args,
+				"cmd":       tc.Cmd,
+				"exit_code": tc.ExitCode,
+			}
 
 			router := setupRouter(tc.Env)
 			w := performRequest(router, "POST", "/apply")
