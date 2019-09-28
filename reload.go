@@ -17,16 +17,20 @@ import (
 
 const processName = "git-sync"
 
+// Mocked functions
+var filePathGlob = filepath.Glob
+var ioutilReadFile = ioutil.ReadFile
+
 func findProcessPid() (int, error) {
 	// Find all files which match /proc/<id>/comm
-	matches, err := filepath.Glob("/proc/*/comm")
+	matches, err := filePathGlob("/proc/*/comm")
 	if err != nil {
 		return 0, err
 	}
 
 	var pid int
 	for _, path := range matches {
-		f, err := ioutil.ReadFile(path)
+		f, err := ioutilReadFile(path)
 		if err != nil {
 			// Failed to read comm contents
 			continue
@@ -59,7 +63,13 @@ func (e *Env) reload(c *gin.Context) {
 		return
 	}
 	// Kill the process
-	proc.Signal(syscall.SIGHUP)
+	err = proc.Signal(syscall.SIGHUP)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprintf("error: %v", err),
+		})
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "sidecar reloaded",
