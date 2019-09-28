@@ -12,12 +12,12 @@ import (
 func fakeExecCommand(command string, args ...string) *exec.Cmd {
 	cs := []string{"-test.run=TestHelperProcess", "--", command}
 	cs = append(cs, args...)
-	cmd := exec.Command(os.Args[0], cs...)
+	cmd := exec.Command(os.Args[0], cs...) // #nosec
 	cmd.Env = []string{"GO_WANT_HELPER_PROCESS=1"}
 	return cmd
 }
 
-func TestHelperProcess(t *testing.T) {
+func TestHelperProcess(_ *testing.T) {
 	if os.Getenv("GO_WANT_HELPER_PROCESS") != "1" {
 		return
 	}
@@ -71,8 +71,8 @@ var testCases = []struct {
 
 func TestApply(t *testing.T) {
 	for i, tc := range testCases {
+		tc := tc // make scopelint happy
 		t.Run(string(i), func(_ *testing.T) {
-			tc := tc // make scopelint happy
 			execCommand = fakeExecCommand
 			defer func() { execCommand = exec.Command }()
 
