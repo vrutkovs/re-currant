@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+      id: extract_branch
     - uses: actions/checkout@v1
     - uses: vrutkovs/action-s2i@master
       with:
@@ -20,16 +24,16 @@ jobs:
         source_path: /opt/app-root/gobinary
         binary_base: quay.io/openshift/origin-cli:4.2
         binary_path: /usr/local/bin/recurrant
-        binary_image: quay.io/vrutkovs/recurrant:${GITHUB_REF:11}
+        binary_image: quay.io/vrutkovs/recurrant:${{ steps.extract_branch.outputs.branch }}
     - name: login to quay
       uses: actions/docker/login@master
       env:
         DOCKER_REGISTRY_URL: quay.io
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_USERNAME: vrutkovs
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       if: github.event_name == 'push'
     - name: push the image
       uses: actions/docker/cli@master
       with:
-        args: "push quay.io/vrutkovs/recurrant:${GITHUB_REF:11}"
+        args: "push quay.io/vrutkovs/recurrant:${{ steps.extract_branch.outputs.branch }}"
       if: github.event_name == 'push'
