@@ -87,13 +87,9 @@ func TestApply(t *testing.T) {
 			w := performRequest(router, "POST", "/apply")
 
 			var response map[string]string
-			err := json.Unmarshal([]byte(w.Body.String()), &response)
+			err := json.Unmarshal(w.Body.Bytes(), &response)
 			assert.Nil(t, err)
 			assert.Equal(t, body, response)
-			// message, exists := response["exit_code"]
-			// assert.Nil(t, err)
-			// assert.True(t, exists)
-			// assert.Equal(t, body["exit_code"], message)
 		})
 	}
 }

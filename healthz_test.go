@@ -28,7 +28,7 @@ func TestHealthZ(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	var response map[string]string
-	err := json.Unmarshal([]byte(w.Body.String()), &response)
+	err := json.Unmarshal(w.Body.Bytes(), &response)
 	message, exists := response["message"]
 	assert.Nil(t, err)
 	assert.True(t, exists)
