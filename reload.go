@@ -1,7 +1,8 @@
 package main
 
 import (
-	"io"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,47 +17,51 @@ import (
 
 const processName = "git-sync"
 
-func (e *Env) reload(c *gin.Context) {
-	// Iterate over /proc/<id>/comm and find `git-sync`
-	err := filepath.Walk("/proc", func(path string, info os.FileInfo, err error) error {
+func findProcessPid() (int, error) {
+	// Find all files which match /proc/<id>/comm
+	matches, err := filepath.Glob("/proc/*/comm")
+	if err != nil {
+		return 0, err
+	}
 
-		// TODO: Use regexp here
-		if strings.Count(path, "/") == 3 {
-			if strings.Contains(path, "/comm") {
-				pid, err := strconv.Atoi(path[6:strings.LastIndex(path, "/")])
-				if err != nil {
-					log.Println(err)
-					return nil
-				}
-
-				// Read comm
-				f, err := ioutil.ReadFile(path)
-				if err != nil {
-					return err
-				}
-				if string(f) == processName {
-					log.Printf("Restarting git-sync process via sending HUP to pid %d", pid)
-					proc, err := os.FindProcess(pid)
-					if err != nil {
-						log.Println(err)
-					}
-					// Kill the process
-					proc.Signal(syscall.SIGHUP)
-
-					// return fake error to stop the walk
-					return io.EOF
-				}
+	var pid int
+	for _, path := range matches {
+		f, err := ioutil.ReadFile(path)
+		if err != nil {
+			// Failed to read comm contents
+			continue
+		}
+		if string(f) == processName {
+			pid, err = strconv.Atoi(path[len("/proc")+1 : strings.LastIndex(path, "/")])
+			if err == nil {
+				return pid, nil
 			}
 		}
-		return nil
-	})
-	if err != nil {
-		if err == io.EOF {
-			// Not an error, just a signal when we are done
-			err = nil
-		} else {
-			log.Fatal(err)
-		}
 	}
-	c.JSON(http.StatusOK, "{'message': 'ok'}")
+	return 0, errors.New("failed to find pid of the process")
+}
+
+func (e *Env) reload(c *gin.Context) {
+	pid, err := findProcessPid()
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprintf("error: %v", err),
+		})
+		return
+	}
+	proc, err := os.FindProcess(pid)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprintf("error: %v", err),
+		})
+		return
+	}
+	// Kill the process
+	proc.Signal(syscall.SIGHUP)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "sidecar reloaded",
+	})
 }
