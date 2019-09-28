@@ -13,18 +13,16 @@ type Env struct {
 	useKustomize bool
 }
 
+const gitCheckoutPath = "checkout"
+
 func main() {
 	// Verify env vars are set
-	gitRepo := os.Getenv("GIT_SYNC_CHECKOUT")
-	if len(gitRepo) == 0 {
-		gitRepo = "repo"
-	}
 	subDir := os.Getenv("RECURRANT_SUBDIR")
 	if len(subDir) == 0 {
-		panic("RECURRANT_SUBDIR env var is not set")
+		subDir = "."
 	}
 
-	applyPath := path.Join(gitRepo, subDir)
+	applyPath := path.Join(gitCheckoutPath, subDir)
 
 	useKustomize := false
 	useKustomizeEnv := os.Getenv("RECURRANT_USE_KUSTOMIZE")
