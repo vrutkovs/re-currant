@@ -35,6 +35,10 @@ secretGenerator:
 
 TODO: use kustomize to create a secret, mount in recurrant pod and reconfigure git-sync to use it
 
+# Custom command
+
+Set `RECURRANT_COMMAND` to use a custom command to start the deploy (make sure it uses `RECURRANT_SUBDIR` env var)
+
 # Why not an operator?
 
 Creating an operator to setup re-currant in particular namespaces and granular permissions would be very useful. Although at this stage creating CRDs requires `cluster-admin` permissions, which might not work for some installs. This app is deliberately kept simple and requires minimal permissions. Other permissions (like cross-namespace applies) could be added via additional rolebindings to re-currant serviceaccount.

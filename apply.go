@@ -18,16 +18,26 @@ func (e *Env) apply(c *gin.Context) {
 	}
 	log.Printf("Checked out commit %s", string(dat))
 
-	// Run `oc apply -k <dir-name>`
-	command := "oc"
-	commandArgs := make([]string, 3)
-	commandArgs[0] = "apply"
-	if e.useKustomize {
-		commandArgs[1] = "-k"
+	var command string
+	var commandArgs []string
+
+	if len(e.customCommand) > 0 {
+		// Run customCommand in a shell
+		command = "sh"
+		commandArgs = []string{"-c", e.customCommand}
 	} else {
-		commandArgs[1] = "-f"
+		// Run `kubectl apply -k <dir-name>`
+		command = "kubectl"
+		commandArgs = make([]string, 3)
+		commandArgs[0] = "apply"
+		if e.useKustomize {
+			commandArgs[1] = "-k"
+		} else {
+			commandArgs[1] = "-f"
+		}
+		commandArgs[2] = e.applyPath
 	}
-	commandArgs[2] = e.applyPath
+
 	log.Printf("Running %s %v", command, strings.Join(commandArgs, " "))
 
 	cmd := exec.Command(command, commandArgs...)

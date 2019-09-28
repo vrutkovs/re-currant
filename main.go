@@ -9,8 +9,9 @@ import (
 
 // Env holds references to useful objects in router funcs
 type Env struct {
-	applyPath    string
-	useKustomize bool
+	applyPath     string
+	useKustomize  bool
+	customCommand string
 }
 
 const gitCheckoutPath = "checkout"
@@ -30,7 +31,11 @@ func main() {
 		useKustomize = true
 	}
 
-	env := &Env{applyPath: applyPath, useKustomize: useKustomize}
+	env := &Env{
+		applyPath:     applyPath,
+		useKustomize:  useKustomize,
+		customCommand: os.Getenv("RECURRANT_COMMAND"),
+	}
 
 	// setup Gin
 	r := gin.New()
