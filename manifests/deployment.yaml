@@ -26,7 +26,7 @@ spec:
         app.kubernetes.io/name: recurrant
     spec:
       containers:
-        - image: "quay.io/vrutkovs/recurrant"
+        - image: "quay.io/vrutkovs/recurrant:master"
           imagePullPolicy: Always
           name: recurrant
           envFrom:
