@@ -29,6 +29,7 @@ jobs:
         binary_base: quay.io/openshift/origin-cli:4.2
         binary_path: /usr/local/bin/recurrant
         binary_image: quay.io/vrutkovs/recurrant:${{ steps.extract_branch.outputs.branch }}
+      if: github.event_name == 'push'
     - name: login to quay
       uses: actions/docker/login@master
       env:
