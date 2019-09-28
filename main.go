@@ -14,9 +14,7 @@ type Env struct {
 }
 
 func main() {
-	// setup webhook listener
-	r := gin.Default()
-
+	// Verify env vars are set
 	gitRepo := os.Getenv("GIT_SYNC_CHECKOUT")
 	if len(gitRepo) == 0 {
 		panic("GIT_SYNC_CHECKOUT env var is not set")
@@ -36,14 +34,22 @@ func main() {
 
 	env := &Env{applyPath: applyPath, useKustomize: useKustomize}
 
+	// setup Gin
+	r := gin.New()
+	r.Use(gin.Recovery())
+	// Private route - won't be logged
 	// liveness healthcheck
-	r.GET("/healthz", env.healthz)
+	private := r.Group("/")
+	private.GET("/healthz", env.healthz)
+
+	// Public routes
+	// git repo got updated
+	public := r.Group("/")
+	public.Use(gin.Logger())
+	public.POST("/reload", env.reload)
 
 	// git repo got updated
-	r.POST("/reload", env.reload)
-
-	// git repo got updated
-	r.POST("/apply", env.apply)
+	public.POST("/apply", env.apply)
 
 	r.Run(":8080")
 }
