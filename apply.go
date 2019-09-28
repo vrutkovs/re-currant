@@ -27,7 +27,11 @@ func (e *Env) apply(c *gin.Context) {
 		commandArgs = []string{"-c", e.customCommand}
 	} else {
 		// Run `kubectl apply -k <dir-name>`
-		command = "kubectl"
+		if e.useOC {
+			command = "oc"
+		} else {
+			command = "kubectl"
+		}
 		commandArgs = make([]string, 3)
 		commandArgs[0] = "apply"
 		if e.useKustomize {

@@ -12,6 +12,7 @@ type Env struct {
 	applyPath     string
 	useKustomize  bool
 	customCommand string
+	useOC         bool
 }
 
 const gitCheckoutPath = "checkout"
@@ -31,9 +32,16 @@ func main() {
 		useKustomize = true
 	}
 
+	useOC := false
+	useOCEnv := os.Getenv("RECURRANT_USE_OC")
+	if useOCEnv == "true" {
+		useOC = true
+	}
+
 	env := &Env{
 		applyPath:     applyPath,
 		useKustomize:  useKustomize,
+		useOC:         useOC,
 		customCommand: os.Getenv("RECURRANT_COMMAND"),
 	}
 

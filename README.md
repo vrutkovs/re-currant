@@ -29,6 +29,8 @@ secretGenerator:
       - RECURRANT_SUBDIR=manifests
       # Use kustomize to apply manifests
       - RECURRANT_USE_KUSTOMIZE=true
+      # Use oc instead of kubectl
+      - RECURRANT_USE_OC=true
 ```
 
 # Git repository credentials
