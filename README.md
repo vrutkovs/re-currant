@@ -43,4 +43,6 @@ Creating an operator to setup re-currant in particular namespaces and granular p
 
 # Push model
 
-re-currant is meant to be kept simple, it basically runs `kubectl apply`. Push model requires a proper pipeline setup, thus [Tekton](https://tekton.dev/) would be a better choice.
+The pod exposes `/reload` endpoint, which restarts `git-sync` sidecar and makes it re-pull the tracked branch and apply changes.
+
+Note, that re-currant is meant to be kept simple, it basically runs `kubectl apply`. Some deployments may require a pipeline setup, in this case [Tekton](https://tekton.dev/) would be a better choice.
