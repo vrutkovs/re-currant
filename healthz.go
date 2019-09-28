@@ -7,5 +7,7 @@ import (
 )
 
 func (e *Env) healthz(c *gin.Context) {
-	c.JSON(http.StatusOK, "{'message': 'ok'}")
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
 }
