@@ -31,13 +31,13 @@ func (e *Env) apply(c *gin.Context) {
 	log.Printf("Running %s %v", command, strings.Join(commandArgs, " "))
 
 	cmd := exec.Command(command, commandArgs...)
-	stdout, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
+	log.Printf(string(output))
 
 	if err != nil {
 		log.Printf(err.Error())
 		return
 	}
 
-	log.Printf(string(stdout))
 	c.String(200, "done")
 }
