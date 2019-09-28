@@ -18,6 +18,10 @@ jobs:
         path: .
         base: registry.fedoraproject.org/f29/golang
         image: recurrant:src
+    - name: Go tests
+      uses: actions/docker/cli@master
+      with:
+        args: "run --entrypoint=sh --rm recurrant:src -c go test ."
     - uses: vrutkovs/action-bin-container@master
       with:
         source_image: recurrant:src
