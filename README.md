@@ -54,4 +54,53 @@ Set `RECURRANT_COMMAND` to use a custom command to start the deploy (make sure i
 
 ## Git repository credentials
 
-TODO: use kustomize to create a secret, mount in recurrant pod and reconfigure git-sync to use it
+Copy ssh key to `id_rsa` file and use `ssh-keyscan github.com > known_hosts` to get setup a known hosts file.
+
+Kustomize file which reconfigures git-sync to use SSH key would look similar to:
+
+```
+# Use remote base
+bases:
+  - github.com/vrutkovs/re-currant//manifests?ref=master
+patchesStrategicMerge:
+  - |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: recurrant
+      namespace: recurrant
+    spec:
+      template:
+        spec:
+          containers:
+            - name: git-sync
+              env:
+                - name: GIT_SYNC_SSH
+                  value: "true"
+              volumeMounts:
+                - name: git-secret
+                  mountPath: /etc/git-secret
+          volumes:
+            - name: git-secret
+              secret:
+                secretName: git-creds
+                defaultMode: 444
+generatorOptions:
+  disableNameSuffixHash: true
+secretGenerator:
+  - name: git-creds
+    namespace: recurrant
+    files:
+      - ssh=id_rsa
+      - known-hosts=known_hosts
+  - name: recurrant
+    namespace: recurrant
+    literals:
+      - GIT_SYNC_REPO=git@github.com:vrutkovs/ocp-gitops
+      - GIT_SYNC_REF=master
+      - GIT_SYNC_WAIT=10
+      - GIT_SYNC_WEBHOOK_TIMEOUT=30s
+      - RECURRANT_SUBDIR=namespaces/gitops
+      - RECURRANT_USE_KUSTOMIZE=false
+      - RECURRANT_USE_OC=true
+```
