@@ -20,7 +20,7 @@ jobs:
         source_path: /opt/app-root/gobinary
         binary_base: quay.io/openshift/origin-cli:4.2
         binary_path: /usr/local/bin/recurrant
-        binary_image: quay.io/vrutkovs/recurrant:latest
+        binary_image: quay.io/vrutkovs/recurrant:${GITHUB_REF:11}
     - name: login to quay
       uses: actions/docker/login@master
       env:
@@ -31,5 +31,5 @@ jobs:
     - name: push the image
       uses: actions/docker/cli@master
       with:
-        args: "push quay.io/vrutkovs/recurrant:latest"
+        args: "push quay.io/vrutkovs/recurrant:${GITHUB_REF:11}"
       if: github.event_name == 'push'
