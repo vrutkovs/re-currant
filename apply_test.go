@@ -24,54 +24,55 @@ func TestHelperProcess(t *testing.T) {
 	os.Exit(0)
 }
 
-func TestApply(t *testing.T) {
-	testCases := []struct {
-		Env      *Env
-		Cmd      string
-		Args     string
-		ExitCode string
-	}{
-		{setupEnv(), "kubectl", "apply -f checkout", ""},
-		{&Env{
-			applyPath:     "foo/bar",
-			useKustomize:  false,
-			useOC:         false,
-			customCommand: "",
-		}, "kubectl", "apply -f foo/bar", ""},
-		{&Env{
-			applyPath:     "checkout",
-			useKustomize:  true,
-			useOC:         false,
-			customCommand: "",
-		}, "kubectl", "apply -k checkout", ""},
-		{&Env{
-			applyPath:     "checkout",
-			useKustomize:  false,
-			useOC:         true,
-			customCommand: "",
-		}, "oc", "apply -f checkout", ""},
-		{&Env{
-			applyPath:     "checkout",
-			useKustomize:  true,
-			useOC:         true,
-			customCommand: "",
-		}, "oc", "apply -k checkout", ""},
-		{&Env{
-			applyPath:     "foo/bar",
-			useKustomize:  true,
-			useOC:         true,
-			customCommand: "",
-		}, "oc", "apply -k foo/bar", ""},
-		{&Env{
-			applyPath:     "foo/bar",
-			useKustomize:  true,
-			useOC:         true,
-			customCommand: "helm release",
-		}, "sh", "-c helm release", ""},
-	}
+var testCases = []struct {
+	Env      *Env
+	Cmd      string
+	Args     string
+	ExitCode string
+}{
+	{setupEnv(), "kubectl", "apply -f checkout", ""},
+	{&Env{
+		applyPath:     "foo/bar",
+		useKustomize:  false,
+		useOC:         false,
+		customCommand: "",
+	}, "kubectl", "apply -f foo/bar", ""},
+	{&Env{
+		applyPath:     "checkout",
+		useKustomize:  true,
+		useOC:         false,
+		customCommand: "",
+	}, "kubectl", "apply -k checkout", ""},
+	{&Env{
+		applyPath:     "checkout",
+		useKustomize:  false,
+		useOC:         true,
+		customCommand: "",
+	}, "oc", "apply -f checkout", ""},
+	{&Env{
+		applyPath:     "checkout",
+		useKustomize:  true,
+		useOC:         true,
+		customCommand: "",
+	}, "oc", "apply -k checkout", ""},
+	{&Env{
+		applyPath:     "foo/bar",
+		useKustomize:  true,
+		useOC:         true,
+		customCommand: "",
+	}, "oc", "apply -k foo/bar", ""},
+	{&Env{
+		applyPath:     "foo/bar",
+		useKustomize:  true,
+		useOC:         true,
+		customCommand: "helm release",
+	}, "sh", "-c helm release", ""},
+}
 
+func TestApply(t *testing.T) {
 	for i, tc := range testCases {
-		t.Run(string(i), func(t *testing.T) {
+		t.Run(string(i), func(_ *testing.T) {
+			tc := tc // make scopelint happy
 			execCommand = fakeExecCommand
 			defer func() { execCommand = exec.Command }()
 
