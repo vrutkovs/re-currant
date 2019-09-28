@@ -4,11 +4,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os/exec"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
+
+// Use alias so that it can be mocked in tests
+var execCommand = exec.Command
 
 func (e *Env) apply(c *gin.Context) {
 	// Read current commit from .git/FETCH_HEAD
@@ -44,7 +48,7 @@ func (e *Env) apply(c *gin.Context) {
 
 	log.Printf("Running %s %v", command, strings.Join(commandArgs, " "))
 
-	cmd := exec.Command(command, commandArgs...)
+	cmd := execCommand(command, commandArgs...)
 	output, err := cmd.CombinedOutput()
 	log.Printf(string(output))
 
@@ -53,5 +57,9 @@ func (e *Env) apply(c *gin.Context) {
 		return
 	}
 
-	c.String(200, "done")
+	c.JSON(http.StatusOK, gin.H{
+		"exit_code": err,
+		"cmd":       command,
+		"args":      strings.Join(commandArgs, " "),
+	})
 }
